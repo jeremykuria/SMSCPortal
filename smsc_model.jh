@@ -1,0 +1,257 @@
+entity Ndc {
+	ndc String,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+entity Network {
+	name String,
+    mcc String,
+    mnc String,
+    numberRanges String,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+
+entity Country {
+	cc String,
+    name String,
+    code String,
+    mcc String,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+
+entity AllowedNetwork{
+	name String,
+    flow SMSFlow,
+    type Status,
+    action String,
+    rule String,
+    status String,
+    statusReason String
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+} 
+
+enum Status {
+ 	ACTIVE,INACTIVE
+}
+
+enum AllowedNetworkAction {
+ 	ALLOW,BLOCK
+}
+
+
+
+enum RouterSMSFlow {
+	MO,MT,DLR
+} 
+enum SMSFlow{
+	MO,MT
+}
+enum NumberType {
+	MSISDN,IMSI
+}
+
+
+entity SenderCode{
+	systemId String,
+    password String,
+    type  SenderType,
+    status Status,
+    statusReason String,
+    billFlag Boolean,
+    billLeg SMSFlow,
+    billParty String,
+    billAmount String,  
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+    
+}
+
+enum SenderType{
+	SHORTCODE,LONG_CODE,ALPHANUMIC
+}
+
+entity Message {
+	id String
+	oa String,
+    da String,
+    oaIMSI String,
+    oaTON Ton,
+    oaNPI Npi,
+    daIMSI String,
+    daTON Ton,
+    daNPI Npi,
+    vlrMscGt String,
+    hlrGt String,
+    sriSmGtResoulutionMode SRIResolutinonMode,
+    message String,
+    messageId String,
+    sessionId String,
+    systemId String,
+    clientIP String,
+    clientPort String,
+    udhiParameters String,
+    scheduledDeliveryTime String,
+    validityTime String,
+    instanceParameters String,
+    priority String,
+    serviceType String,
+    protocolID String,
+	deliveryReceiptRequest Boolean,
+    characterSet String,
+    smsFlow SMSFlow,
+	messageFlow MessageFlow,
+    sourceSystem String,
+    onnetOffNet String,
+    billFlag Boolean,
+    billLeg SMSFlow,
+    billParty String,
+    billAmount Long,
+    billedNo String,
+    billCode String,
+    billDesc String,
+    cc String,
+    ndc String,
+    mnc String,
+    mcc String,
+    noOfParts Integer, 
+    seqNo String,
+    partNo Integer,
+    segments String,
+    doneTimestamp String,
+    numberOfAttempts String,
+    storeMessage Boolean,
+    processingStatus ProcessingStatus,
+    processingReason String, 
+    processingTime String,
+    dlrStatus DeliveryReceiptStatus,
+    dlrTime String,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+enum ProcessingStatus {
+	OK,FAILED,SUCCESS
+}
+
+enum DeliveryReceiptStatus {
+	DELIVRD,UNDELIVD,EXPIRED
+}
+enum MessageFlow {
+	A2P,P2A,P2P
+}
+
+enum SRIResolutinonMode {
+	MSISDN, HLRGT
+}
+enum Ton {
+	UNKNOWN,INTERNATIONAL
+}
+
+enum Npi{
+	UNKNOWN
+}
+
+// an ignored comment
+/** not an ignored comment */
+
+entity SmppAccount {
+	systemId String,
+    password String,
+    systemType String,
+    allowedBindTypes BindType,
+    suportedVersions String,
+    ton Ton, 
+    npi Npi,
+    allowedIps String,
+    allowedProcotolIds String,
+    allowedDcsValues String,
+    maxSessions String,
+    activeSessions String, 
+    supportedMessageClasses String,
+    defaulCharacterSet String,
+    allowedAllSenderCodes Boolean,
+    expiryDuration String,
+    storeMessageFlag Boolean,
+    allowedTXTPS String,
+    allowedRXTPS String,
+    destinationIP String,
+    destinationPorts String,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+entity Session {
+	clientIp String,
+    clientPort String,
+    bindTime String,
+    bindType BindType,
+    lastActivityTimeStamp String, 
+    ton Ton,
+    npi Npi,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+enum BindType {
+	RECEIVER, TRANSCEIVER , TRANSMITTER 
+}
+
+entity MoDlr {
+	aParty String,
+    bParty String,
+    message String,
+    processingStatus ProcessingStatus,
+    processingReason String,
+    deliveredTime String,
+    deliveredStatus DeliveryReceiptStatus,
+    messageType RouterSMSFlow,
+    createdOn String, 
+    createdBy String, 
+    updateOn String, 
+    updatedBy String
+}
+
+
+
+relationship ManyToOne {
+    Ndc{ndc} to Network,
+    Network {mnc} to Country
+}
+
+relationship OneToOne {
+    Message{id} to MoDlr
+}
+// Set pagination options
+paginate SmppAccount, Message, SenderCode,Session,Ndc with infinite-scroll
+paginate SmppAccount,Message, SenderCode,Session,Ndc with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except Employee, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
